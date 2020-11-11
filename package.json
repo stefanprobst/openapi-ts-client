@@ -1,0 +1,53 @@
+{
+  "name": "openapi-ts-client",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "repository": "git@github.com:stefanprobst/openapi-ts-client.git",
+  "author": "Stefan Probst <stefanprobst@kolabnow.com>",
+  "license": "MIT",
+  "bin": {
+    "create-openapi-client": "src/cli.js"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "format": "prettier . -l --ignore-path .gitignore",
+    "format:fix": "yarn format --write",
+    "lint": "eslint . --ignore-path .gitignore",
+    "lint:fix": "yarn lint --fix"
+  },
+  "dependencies": {
+    "got": "^11.6.0",
+    "lodash.camelcase": "^4.3.0",
+    "mri": "^1.1.6",
+    "swagger2openapi": "^7.0.2",
+    "yaml": "^1.10.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.3.0",
+    "prettier": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=12.9",
+    "yarn": "^1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "precommit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|ts)": "eslint --cache --fix",
+    "*.(json,md)": "prettier --write"
+  }
+}
