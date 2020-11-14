@@ -97,15 +97,21 @@ function createRequestFunction({ openApiDocument, baseUrl: customBaseUrl }) {
         let message
         if (response.headers.get('content-type') === 'application/json') {
           const data = await response.json()
-          if (data.message !== undefined) {
+          if (typeof data.message === 'string') {
             message = data.message
-          } else if (data.error !== undefined && data.error.message !== undefined) {
-            message = data.error
-          } else if (
-            Array.isArray(data.errors) &&
-            data.errors[0].message !== undefined
-          ) {
-            message = data.errors[0].message
+          } else if (data.error !== undefined) {
+            if (typeof data.error === 'string') {
+              message = data.error
+            } else if (typeof data.error.message === 'string') {
+              message = data.error.message
+            }
+          } else if (Array.isArray(data.errors)) {
+            const [error] = data.errors
+            if (typeof error === 'string') {
+              message = error
+            } else if (typeof error.message === 'string') {
+              message = error.message
+            }
           }
         }
         throw new HttpError(response, message)
