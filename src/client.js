@@ -97,7 +97,16 @@ function createRequestFunction({ openApiDocument, baseUrl: customBaseUrl }) {
         let message
         if (response.headers.get('content-type') === 'application/json') {
           const data = await response.json()
-          message = data.message
+          if (data.message !== undefined) {
+            message = data.message
+          } else if (data.error !== undefined && data.error.message !== undefined) {
+            message = data.error
+          } else if (
+            Array.isArray(data.errors) &&
+            data.errors[0].message !== undefined
+          ) {
+            message = data.errors[0].message
+          }
         }
         throw new HttpError(response, message)
       }
