@@ -476,8 +476,16 @@ function createScalarType(schema) {
       const type = schema.format ? `string /* ${schema.format} */` : 'string'
       return schema.nullable ? createNullableType(type) : type
     }
-    default:
-      throw new Error(`Unknown scalar type ${schema.type}.`)
+    default: {
+      // TODO: not sure if it is actually valid to have a scheme pbject
+      // without `type` - but we need to work around some weirdness
+      const wrapped = schema.enum.map((value) =>
+        typeof value === 'string' ? `"${value}"` : String(value)
+      )
+      const values = schema.nullable ? [...wrapped, 'null'] : wrapped
+      return createTypeUnion(values)
+      // throw new Error(`Unknown enum type ${schema.type}.`)
+    }
   }
 }
 
