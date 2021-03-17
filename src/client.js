@@ -11,7 +11,7 @@ function createImports() {
     '/* eslint-disable @typescript-eslint/no-namespace */',
     '',
     'import { useMutation, useQuery } from "react-query"',
-    'import type { MutationConfig, MutationResultPair, QueryConfig, QueryResult } from "react-query"',
+    'import type { UseMutationOptions, UseMutationResult, UseQueryOptions, UseQueryResult } from "react-query"',
   ].join('\n')
 }
 
@@ -160,7 +160,7 @@ function createEndpoint({
   const hook = isQueryHook ? 'useQuery' : 'useMutation'
   const queryHookParams = [
     ...params,
-    `options?: ${'QueryConfig'}<${typeName}.Response.Success, ${typeName}.Response.Error>`,
+    `options?: ${'UseQueryOptions'}<${typeName}.Response.Success, ${typeName}.Response.Error>`,
     `requestOptions?: RequestOptions<${typeName}.Response.Success>`,
   ]
   const hooksCacheKey = [
@@ -201,7 +201,7 @@ function createEndpoint({
     isQueryHook
       ? `export function use${capitalize(operationName)}(${queryHookParams.join(
           ', '
-        )}): QueryResult<${typeName}.Response.Success, ${typeName}.Response.Error> {
+        )}): UseQueryResult<${typeName}.Response.Success, ${typeName}.Response.Error> {
       return ${hook}([${[`"${operationName}"`]
           .concat(hooksCacheKey)
           .join(', ')}], () => ${operationName}(${hooksCacheKey
@@ -213,12 +213,12 @@ function createEndpoint({
         // args for a mutation function
         `export function use${capitalize(
           operationName
-        )}(options?: MutationConfig<
+        )}(options?: UseMutationOptions<
           ${typeName}.Response.Success,
           ${typeName}.Response.Error,
           [${mutationFnParams.join(', ')}],
           unknown
-          >): MutationResultPair<
+          >): UseMutationResult<
           ${typeName}.Response.Success,
           ${typeName}.Response.Error,
           [${mutationFnParams.join(', ')}],
