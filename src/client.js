@@ -99,10 +99,10 @@ function createRequestFunction({ openApiDocument, baseUrl: customBaseUrl }) {
           const data = await response.json()
           if (typeof data.message === 'string') {
             message = data.message
-          } else if (data.error !== undefined) {
+          } else if (data.error != null) {
             if (typeof data.error === 'string') {
               message = data.error
-            } else if (typeof data.error.message === 'string') {
+            } else if (typeof data.error?.message === 'string') {
               message = data.error.message
             }
           } else if (Array.isArray(data.errors)) {
